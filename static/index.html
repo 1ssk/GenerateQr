@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор QR-кодов</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        #qrImage {
+            max-width: 100%;
+            margin-top: 20px;
+            display: block;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .download-link {
+            display: block;
+            margin-top: 15px;
+            color: #3498db;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .download-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Генератор QR-кодов</h1>
+    <div class="container">
+        <div class="input-group">
+            <input type="text" id="qrText" placeholder="Введите текст для QR-кода">
+        </div>
+        <button onclick="generateQRCode()">Сгенерировать QR-код</button>
+        <img id="qrImage" style="display: none;">
+        <a id="downloadLink" class="download-link" style="display: none;" href="#" download="qrcode.png">Скачать QR-код</a>
+    </div>
+
+    <script>
+        function generateQRCode() {
+            const text = document.getElementById('qrText').value;
+            if (!text) {
+                alert('Пожалуйста, введите текст');
+                return;
+            }
+
+            const qrUrl = `/qr?text=${encodeURIComponent(text)}`;
+            const qrImage = document.getElementById('qrImage');
+            const downloadLink = document.getElementById('downloadLink');
+
+            qrImage.src = qrUrl;
+            qrImage.style.display = 'block';
+            
+            downloadLink.href = qrUrl;
+            downloadLink.style.display = 'block';
+
+            qrImage.onload = () => {
+                console.log('QR-код успешно загружен');
+            };
+            qrImage.onerror = () => {
+                alert('Ошибка при генерации QR-кода');
+                qrImage.style.display = 'none';
+                downloadLink.style.display = 'none';
+            };
+        }
+
+        // Генерация при нажатии Enter
+        document.getElementById('qrText').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateQRCode();
+            }
+        });
+    </script>
+</body>
+</html>
